@@ -1,0 +1,137 @@
+/**
+ * D R O P Z O N E
+ */
+
+.dropzone {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-items: flex-start;
+    text-align: center;
+    border: 4px dashed #343a40;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.dropzone.drag-over {
+    opacity: 0.4;
+}
+
+.dropzone input {
+    display: none;
+}
+
+
+.dropzone-disabled {
+    border: 4px solid #343a40;
+    opacity: 0.4;
+}
+
+
+/**
+ * D R O P Z O N E   P R O M P T
+ */
+
+.dropzone span {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    background-color: #e9ecef;
+    order: 1;
+}
+
+.dropzone span i {
+    display: block;
+    font-size: 60px;
+}
+
+.dropzone span i:before {
+    content: "\f093";
+}
+
+.dropzone .small_prompt i {
+    display: block;
+    font-size: 60px;
+}
+
+.dropzone .small_prompt i:before {
+    content: "\f067";
+}
+
+.dropzone .small_prompt p {
+    display: none;
+}
+
+.dropzone .small_prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 5px;
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-size: cover;
+    position: relative;
+}
+
+.dropzone .small_prompt:hover {
+    opacity: 0.6;
+}
+
+
+
+/**
+ * D R O P Z O N E   T H U M B N A I L
+ */
+
+
+.dropzone .thumb {
+    margin: 5px;
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: lightgray;
+    background-size: cover;
+    position: relative;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    transition-property: transform;
+}
+
+.dropzone .thumb::after {
+    content: attr(data-label);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2em;
+    width: 100%;
+    padding: 5px 0;
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    transition-duration: 0.3s;
+}
+
+.dropzone .thumb:hover {
+    transform: scale(1.1);
+}
+
+.dropzone .thumb:hover::after {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    content: "\f014";
+    font-size: 40px;
+    height: 100%;
+}

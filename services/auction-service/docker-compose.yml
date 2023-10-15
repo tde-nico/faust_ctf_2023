@@ -1,0 +1,22 @@
+version: "2.2"
+# ipv6 is not supported in version 3
+
+services:
+  auction-service:
+    network_mode: host
+    restart: unless-stopped
+    image: faust.cs.fau.de:5000/auction-service
+    init: true
+    build: .
+    #ports:
+     #   - "12345-12346:12345-12346"
+    volumes:
+      - ./data/:/app/data/
+
+networks:
+ default:
+   enable_ipv6: true
+   ipam:
+       driver: default
+       config:
+           - subnet: "fd42:d0ce:1234::/64"

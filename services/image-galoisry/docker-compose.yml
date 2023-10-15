@@ -1,0 +1,41 @@
+version: "2.2"
+
+services:
+
+  mongo:
+    image: mongo:4.4.6
+    container_name: mongodb
+    restart: always
+    command: mongod --wiredTigerCacheSizeGB 0.5
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example 
+
+  image-galoisry-deps:
+    scale: 0
+    image: faust.cs.fau.de:5000/image-galoisry-deps
+      #image: localhost/dtenbrinck/image-galoisry-deps
+    build:
+      context: ./image-galoisry
+      dockerfile: Dockerfile.deps
+
+  image-galoisry:
+    restart: unless-stopped
+      #image: localhost/dtenbrinck/image-galoisry
+    image: faust.cs.fau.de:5000/image-galoisry
+    container_name: image-galoisry
+    init: true
+    build: ./image-galoisry
+    depends_on:
+      - mongo
+    ports:
+        - "5005:5000" 
+
+
+networks:
+  default:
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: "fd44:d1ce:1773::/64"

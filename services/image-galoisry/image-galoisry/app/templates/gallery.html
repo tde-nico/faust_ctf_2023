@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+    .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/gallery.css">
+    <link rel="stylesheet" href="/static/css/fileList.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+    <script src="/static/js/jquery.js"></script>
+    <title>Gallery {{gallery}}</title>
+    <link rel="icon" type="image/png" href="/static/img/galois_icon.png">
+</head>
+
+<body>
+    <!-- By.Goodkatz | Free to use, Found at: https://javascript.plainenglish.io/20-header-design-html-for-website-c5cd71af6401 -->
+    <div class="header">
+        <!--Content before waves-->
+        <div class="inner-header flex">
+            <path fill="#FFFFFF" stroke="#000000" stroke-width="10" stroke-miterlimit="10" d="M57,283" />
+            <g>
+                <path fill="#fff" d="M250.4,0.8C112.7,0.8,1,112.4,1,250.2c0,137.7,111.7,249.4,249.4,249.4c137.7,0,249.4-111.7,249.4-249.4
+    C499.8,112.4,388.1,0.8,250.4,0.8z M383.8,326.3c-62,0-101.4-14.1-117.6-46.3c-17.1-34.1-2.3-75.4,13.2-104.1
+    c-22.4,3-38.4,9.2-47.8,18.3c-11.2,10.9-13.6,26.7-16.3,45c-3.1,20.8-6.6,44.4-25.3,62.4c-19.8,19.1-51.6,26.9-100.2,24.6l1.8-39.7    c35.9,1.6,59.7-2.9,70.8-13.6c8.9-8.6,11.1-22.9,13.5-39.6c6.3-42,14.8-99.4,141.4-99.4h41L333,166c-12.6,16-45.4,68.2-31.2,96.2  c9.2,18.3,41.5,25.6,91.2,24.2l1.1,39.8C390.5,326.2,387.1,326.3,383.8,326.3z"
+                />
+            </g>
+            </svg>
+            <h1><a href="/">Secure Image Gallery Hub (SIGH)</a></h1>
+        </div>
+        <!--Waves Container-->
+        <div>
+            <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+    <defs>
+    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+    </defs>
+    <g class="parallax">
+    <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+    <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+    <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+    <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+    </g>
+    </svg>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="content">
+        <div class="container">
+            <div class="top">
+                <div>
+                    <h3 class="display-6 pb-3">{{gallery}}</h3>
+                    {{description}}
+                </div>
+                <div style="white-space: nowrap;">
+                    <a class="btn p-0 m-0" id="delete_gal">
+                        <div class="thumbnail add-new" title="Delete gallery">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </a>
+
+                    <a class="btn p-0 m-0" href="/gallery/{{gallery}}/upload">
+                        <div class="thumbnail add-new" title="Upload images">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
+            <div class="alert alert-{{category}} d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="{{category}}:">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+                <div>
+                    {{ message }}
+                </div>
+            </div>
+            {% endfor %} {% endif %} {% endwith %}
+            <div class="gallery">
+
+
+                <ul class="file-list">
+                    {% for filename in images %}
+                    <li>
+                        <span class="file-name">{{filename}}</span>
+                        <span class="action-icons" data-file-id="{{filename}}">
+                  <a href="/gallery/{{gallery}}/download/{{filename}}">
+                  <i class="fas fa-download" title="Download"></i>
+                  </a>
+                  <i class="fas fa-trash" title="Delete"></i>
+                  <i class="fas fa-lock" title="Decrypt"></i>
+                </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+<script>
+    // Add an onclick event handler to the delete button
+    const deleteButton = document.getElementById("delete_gal");
+    deleteButton.addEventListener("click", function() {
+        const password = prompt("Enter password to delete:");
+        if (password) {
+            fetch('/gallery/{{gallery}}/delete_gal', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        password: password
+                    })
+                })
+                .then(response => response.text())
+                .then(result => {
+                    document.body.innerHTML = result;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    });
+
+    //Some EventListeners (for the icons)
+    document.addEventListener("DOMContentLoaded", function() {
+        const actionIconContainers = document.querySelectorAll(".action-icons");
+        actionIconContainers.forEach(actionIcons => {
+            const fileId = actionIcons.getAttribute("data-file-id");
+
+            const deleteIcon = actionIcons.querySelector(".fa-trash");
+            deleteIcon.addEventListener("click", function() {
+                const password = prompt("Enter password to delete:");
+                if (password) {
+                    fetch('/gallery/{{gallery}}/delete', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                fileId: fileId,
+                                password: password
+                            })
+                        })
+                        .then(response => response.text())
+                        .then(result => {
+                            document.body.innerHTML = result;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+
+            const decryptIcon = actionIcons.querySelector(".fa-lock");
+            decryptIcon.addEventListener("click", async function() {
+                // Implement decrypt logic using the fileId
+                const password = prompt("Enter password to decrypt:");
+                if (password) {
+                    response = await fetch('/gallery/{{gallery}}/decrypt', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            fileId: fileId,
+                            password: password
+                        })
+                    });
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileId;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                }
+            });
+        });
+    });
+</script>
+
+</html>

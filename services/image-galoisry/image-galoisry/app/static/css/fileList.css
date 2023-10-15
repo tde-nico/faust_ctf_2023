@@ -1,0 +1,21 @@
+.file-list {
+  list-style: none;
+  padding: 0;
+}
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.file-name {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.action-icons i {
+  margin-right: 10px;
+  cursor: pointer;
+}
